@@ -1,3 +1,5 @@
+import products from "../data/products";
+
 const cartReducer = (state, action) => {
   //กระบวนการจัดการ state ผ่าน action
   if (action.type === "CALCULATE_TOTAL") {
@@ -20,6 +22,13 @@ const cartReducer = (state, action) => {
       amount,
     };
   }
+  if (action.type === "REMOVE") {
+    return {
+      ...state,
+      products: state.products.filter((item) => item.id !== action.payload)
+    };
+  }
+  return state;
 };
 
 export default cartReducer;
