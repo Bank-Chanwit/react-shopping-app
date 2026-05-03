@@ -1,0 +1,7 @@
+services:
+  web-app:
+    build: .
+    ports:
+      - "3000:3030"
+    container_name: react-shopping-app
+    restart: always
