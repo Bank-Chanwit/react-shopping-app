@@ -1,6 +1,36 @@
-node_modules
-dist
-build
+# VCS
 .git
+.gitignore
+.gitlab-ci.yml
+.github
+
+# Dependencies
+node_modules
+
+# Build artifacts
+build
+dist
+
+# Environment
 .env
-npm-debug.log
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+npm-error.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE

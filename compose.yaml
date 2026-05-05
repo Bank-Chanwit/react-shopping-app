@@ -1,7 +1,19 @@
+version: '3.9'
+
 services:
   web-app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: react-shopping-app
     ports:
       - "3000:3030"
-    container_name: react-shopping-app
-    restart: always
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3030/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s

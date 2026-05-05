@@ -1,19 +1,23 @@
-# Stage 1: Build stage
 FROM node:20-alpine AS build
-WORKDIR /react-shopping-app/app
+
+WORKDIR /app
+
 COPY package*.json ./
-RUN npm install
+RUN npm ci --only=production && npm cache clean --force
+
 COPY . .
-RUN npm run build
+RUN npm run build && npm prune --production
 
 FROM nginx:stable-alpine
-# ลบไฟล์เริ่มต้นของ Nginx ออกก่อน
-RUN rm -rf /usr/share/nginx/html/*
-# คัดลอกไฟล์ที่ build เสร็จแล้วจาก Stage แรกมาวาง
-COPY --from=build /react-shopping-app/app/build /usr/share/nginx/html
 
-# คัดลอกไฟล์คอนฟิกที่เราเขียนในข้อ 1 ไปทับของเดิมใน Nginx
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost:3030/ || exit 1
+
 EXPOSE 3030
+
 CMD ["nginx", "-g", "daemon off;"]
